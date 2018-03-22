@@ -1,0 +1,18 @@
+{
+  "plugins": [
+    "flowtype"
+  ],
+  "extends": [
+    "standard",
+    "plugin:flowtype/recommended"
+  ],
+  "rules": {
+    "flowtype/require-valid-file-annotation": [
+      2,
+      "always",
+      {
+        "annotationStyle": "line"
+      }
+    ]
+  }
+}
