@@ -10,7 +10,7 @@ import App from './scenes/App/index'
 import * as reducers from './scenes/App/services/reducers'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'https://aws-twitter.herokuapp.com/api'
+axios.defaults.baseURL = '/api'
 axios.defaults.timeout = 5000
 
 const store = createStore(combineReducers(reducers), window.__REDUX_DEVTOOLS_EXTENSION__ &&

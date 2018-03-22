@@ -28,7 +28,7 @@ type State = {
 export default connect(mapStateToProps, mapDispatchToProps)(class extends Component<Props, State> {
   handleConfirm = () => {
     // this.setState({waiting: true})
-    axios.post('/signin', {
+    axios.post('/api/signin', {
       email: this.state.email,
       password: this.state.password
     }).then((response) => {
