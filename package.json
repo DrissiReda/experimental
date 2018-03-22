@@ -14,5 +14,25 @@
     "build": "(cd client && yarn build); (cd server && yarn build)",
     "postinstall": "yarn install --cwd server --production=false && yarn install --cwd client --production=false",
     "heroku-postbuild": "(cd server && yarn build); (cd client && yarn build)"
+  },
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cookie-parser": "^1.4.3",
+    "crypto": "^1.0.1",
+    "express": "^4.16.3",
+    "express-session": "^1.15.6",
+    "gravatar": "^1.6.0",
+    "method-override": "^2.3.10",
+    "mongoose": "^5.0.11",
+    "morgan": "^1.9.0",
+    "nodemailer": "^4.6.3",
+    "passport": "^0.4.0",
+    "passport-facebook": "^2.1.1",
+    "passport-google-oauth": "^1.0.0",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "sprintf": "^0.1.5",
+    "sync-request": "^6.0.0",
+    "thirty-two": "^1.0.2"
   }
 }
