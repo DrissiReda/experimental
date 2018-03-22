@@ -127,15 +127,45 @@ const transporter = mailing.createTransport({
 
       // SIGNUP =================================
       // show the signup form
-      app.get('/signup', function(req, res) {
-          res.json(req.user);
-      });
 
       // process the signup form
-      app.post('/signup', passport.authenticate('local-signup', {
-          successRedirect : '/', // redirect to the secure profile section
-          failureRedirect : '/signup' // redirect back to the signup page if there is an error
-      }));
+      app.post('/api/signup', function(req, res, next){
+            passport.authenticate('local-signup',
+              function(err, user, next){
+                if(err)
+                  return next(err);
+                  if(!user){
+                    return res.status(401).json({message: 'no authorization, get lost!'});
+                  }else {
+                  console.log(user)
+                  /*if(user.key) {
+                  res.session.fixingkey=req.user.key;
+                    console.log(" this is totp");
+                    res.session.method = 'totp';
+                } else {
+                    console.log(" this is plain ");
+                    res.session.method = 'plain';
+                }*/
+                // what is sent to the server
+                var payload={
+                  username : user.username,
+                  email : user.email,
+                  avatar_url:user.avatar_url,
+                  key : user.key,
+                };
+                var token=jwt.sign({
+                      email : user.email,
+                      password : user.password
+                    },app.get('secret'),{expiresIn: 86400}); //24 hours
+                res.status(200).json({
+                    success:true,
+                    message: 'successfully authenticated !',
+                    data : payload,
+                    token : token
+                })
+              }
+            })(req, res, next)
+        })
 
   // facebook -------------------------------
 
