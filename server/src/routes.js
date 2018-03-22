@@ -226,21 +226,45 @@ const transporter = mailing.createTransport({
       app.get('/auth/google', passport.authenticate('google', {scope : ['profile', 'email']}));
 
       // the callback after google has authenticated the user
-      app.get('/auth/google/callback',
-          passport.authenticate('google', {
-              failureRedirect : '/auth/google'
-          }), function(req, res) {
-                console.log("we're here though");
-                if(req.user.key) {
-                  req.session.fixingkey=req.user.key;
-                  console.log(" this is totp");
-                  req.session.method = 'totp';
-                  res.redirect('/totp-input');
-                } else {
-                  console.log(" this is plain ");
-                  req.session.method = 'plain';
-                  res.redirect('/');
+      app.get('/auth/google/callback', function(req, res, next){
+            passport.authenticate('google',function(err, user, next) {
+                  console.log("we're here though");
+                  if(err)
+                    return next(err);
+                    if(!user){
+                      return res.status(401).json({message: 'no authorization, get lost!'});
+                    }else {
+                    console.log(user)
+                  /*
+                  if(user.key) {
+                    req.session.fixingkey=req.user.key;
+                    console.log(" this is totp");
+                    req.session.method = 'totp';
+                    res.redirect('/totp-input');
+                  } else {
+                    console.log(" this is plain ");
+                    req.session.method = 'plain';
+                    res.redirect('/');
+                  }
+                  */
+                  var payload={
+                    username : user.username,
+                    email : user.email,
+                    avatar_url:user.avatar_url,
+                    key : user.key,
+                  };
+                  var token=jwt.sign({
+                        email : user.email,
+                        google : user.google
+                      },app.get('secret'),{expiresIn: 86400}); //24 hours
+                  res.status(200).json({
+                      success:true,
+                      message: 'successfully authenticated !',
+                      data : payload,
+                      token : token
+                  })
                 }
+              })(req, res, next)
             });
      app.get('/totp-setup',
         isLoggedIn,
@@ -411,17 +435,7 @@ const transporter = mailing.createTransport({
   })
 
   // create new user
-  app.post('/api/signup', (req, res) => {
-    let newUser = {
-      username: req.body.username,
-      email: req.body.email,
-      password: req.body.password
-    }
-    Users.addUser(newUser, (err, user) => {
-      if (err) throw err
-      res.json(user)
-    })
-  })
+
 
   // create a new tweet
   app.post('/api/tweets', (req, res) => {
