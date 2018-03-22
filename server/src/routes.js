@@ -95,10 +95,15 @@ const transporter = mailing.createTransport({
                 avatar_url:user.avatar_url,
                 key : user.key,
               };
+              var token=jwt.sign({
+                    email : user.email,
+                    password : user.password
+                  },app.get('secret'),{expiresIn: 86400}); //24 hours
               res.status(200).json({
                   success:true,
                   message: 'successfully authenticated !',
-                  data : payload
+                  data : payload,
+                  token : token
               })
             }
           })(req, res, next)
