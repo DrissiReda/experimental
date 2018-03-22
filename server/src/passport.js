@@ -111,7 +111,6 @@ module.exports = function(passport) {
                         newUser.key            = null;
                         newUser.avatar_url     = gravatar.url(email,{s:'100',r: 'x', d: 'identicon'},true);
                         newUser.local.password = newUser.generateHash(password);
-                        newUser.local.email    = email;
 
                         newUser.save(function(err) {
                             if (err)
@@ -123,30 +122,7 @@ module.exports = function(passport) {
 
                 });
             // if the user is logged in but has no local account...
-            } else if ( !req.user.local.email ) {
-                // ...presumably they're trying to connect a local account
-                // BUT let's check if the email used to connect a local account is being used by another user
-                User.findOne({ 'email' :  email }, function(err, user) {
-                    if (err)
-                        return done(err);
-
-                    if (user) {
-                        req.session.error='That email is already taken.';
-                        return done(null, false);
-                        // Using 'loginMessage instead of signupMessage because it's used by /connect/local'
-                    } else {
-                        var user = req.user;
-                        user.local.email = email;
-                        user.local.password = user.generateHash(password);
-                        user.save(function (err) {
-                            if (err)
-                                return done(err);
-
-                            return done(null,user);
-                        });
-                    }
-                });
-            } else {
+          } else {
                 // user is logged in and already has a local account. Ignore signup. (You should log out before trying to create a new account, user!)
                 return done(null, req.user);
             }
