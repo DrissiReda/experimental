@@ -52,7 +52,6 @@ module.exports = function(passport) {
                 // if there are any errors, return the error
                 if (err)
                     return done(err);
-
                 // if no user is found, return the message
                 if (!user){
                     req.session.error='No user found';
@@ -66,7 +65,7 @@ module.exports = function(passport) {
 
                 // all is well, return user
                 else {
-                    req.session.success='You are successefully logged in ! '+user.username;
+                    console.log('You are successefully logged in ! '+user.username)
                     return done(null, user);
                 }
             });

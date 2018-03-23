@@ -74,6 +74,7 @@ const transporter = mailing.createTransport({
 		app.post('/api/signin', function(req, res, next){
           passport.authenticate('local-signin',
             function(err, user, next){
+              console.log("**posting**")
               if(err)
                 return next(err);
                 if(!user){

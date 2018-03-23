@@ -32,10 +32,12 @@ export default connect(mapStateToProps, mapDispatchToProps)(class extends Compon
       email: this.state.email,
       password: this.state.password
     }).then((response) => {
+      console.log("**client getting answers")
       // this.setState({waiting: false})
       // this.props.toggleSignIn(false)
       console.log(response)
     }).catch((error) => {
+      console.log('**logging error')
       // this.setState({waiting: false})
       console.log(error)
     })
